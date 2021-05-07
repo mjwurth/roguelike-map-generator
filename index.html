@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<script>
+    function load(){
+        const canvas = document.getElementById('map');
+        const ctx = canvas.getContext('2d');
+
+        // fill canvas with white
+        ctx.fillStyle='white';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        
+        // create prompt text
+        ctx.font = "30px Comic Sans MS";
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.fillText("Click to generate map", canvas.width/2, canvas.height/2); 
+    }
+
+    function makeMap(){
+        const canvas = document.getElementById('map');
+        const ctx = canvas.getContext('2d');
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle='white';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        var cells = [
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0]
+        ];
+        
+        // plot map through cells
+        queue = [[3 + Math.floor(Math.random() * 4), 3 + Math.floor(Math.random() * 4)]]; // first room is in middle 4x4 square
+        totalRooms = 7 + Math.floor(Math.random() * 10); // 7 + [0,9] rooms
+        endRooms = [];
+
+        for(var room = 0; (room < totalRooms) && (room < queue.length); room++){
+            var roomX = queue[room][0];
+            var roomY = queue[room][1];
+            var endRoom = true;
+
+            cells[roomY][roomX] = 1;
+
+            // determine neighbour cells in clockwise
+            var neighbours = [[roomX, roomY - 1], [roomX + 1, roomY], [roomX, roomY + 1], [roomX - 1, roomY]];
+
+            // check each neighbour
+            for(var i = 0; i < neighbours.length; i++){
+                neighbourX = neighbours[i][0];
+                neighbourY = neighbours[i][1];
+
+                // check if cell is border, skip if it is
+                if (neighbourX == 0 || neighbourX == 9 || neighbourY == 0 || neighbourY == 9){
+                    continue;
+                }
+
+                // if cell is already occupied give up
+                if (cells[neighbourY][neighbourX] > 0){
+                    continue;
+                }
+
+                // If the neighbour cell itself has more than one filled neighbour, give up.
+                if ((cells[neighbourY - 1][neighbourX] + cells[neighbourY][neighbourX + 1] + cells[neighbourY + 1][neighbourX]) + cells[neighbourY][neighbourX - 1] > 1){
+                    continue;
+                }
+                
+                // Random 50% chance, give up
+                if(Math.random() < 0.5){
+                    continue;
+                }
+
+                // Otherwise, mark the neighbour cell as having a room in it, and add it to the queue.
+                queue.push([neighbourX, neighbourY]);
+                endRoom = false;
+            }
+            
+            // if less than 7 rooms, puts starting room back in queue
+            if(queue.length < 7 && room == queue.length - 1){
+                queue.push(queue[0]);
+            }
+
+            if(endRoom){
+                endRooms.push([roomX, roomY]);
+            }
+        }
+
+        // iterate over all cells of map to draw
+        var cellSize = canvas.width/10;
+        ctx.fillStyle='black';
+        for(var y = 0; y < cells.length; y++) {
+            for(var x = 0; x < cells[y].length; x++) {
+                if(cells[y][x] > 0){
+                    ctx.strokeRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
+                }
+            }
+        }
+
+    }
+</script>
+<html>
+<body style="background-color:rgb(51, 51, 51);" onload="load()">
+
+    <canvas id="map" width="600" height="600" onclick="makeMap()";></canvas>
+
+</body>
+</html> 
