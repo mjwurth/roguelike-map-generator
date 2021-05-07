@@ -39,7 +39,6 @@
         // plot map through cells
         queue = [[3 + Math.floor(Math.random() * 4), 3 + Math.floor(Math.random() * 4)]]; // first room is in middle 4x4 square
         totalRooms = 7 + Math.floor(Math.random() * 10); // 7 + [0,9] rooms
-        endRooms = [];
 
         // set start room = 1
         cells[queue[0][1]][queue[0][0]] = 1;
@@ -47,7 +46,6 @@
         for(var room = 0; (room < totalRooms) && (room < queue.length); room++){
             var roomX = queue[room][0];
             var roomY = queue[room][1];
-            var endRoom = true;
 
             // determine neighbour cells in clockwise
             var neighbours = [[roomX, roomY - 1], [roomX + 1, roomY], [roomX, roomY + 1], [roomX - 1, roomY]];
@@ -80,7 +78,6 @@
                 // Otherwise, mark the neighbour cell as having a room in it, and add it to the queue.
                 queue.push([neighbourX, neighbourY]);
                 cells[neighbourY][neighbourX] = 1;
-                endRoom = false;
             }
             
             // if less than 7 rooms, puts starting room back in queue
@@ -88,8 +85,20 @@
                 queue.push(queue[0]);
             }
 
-            if(endRoom){
-                endRooms.push([roomX, roomY]);
+        }
+
+        // determine end rooms and possible secret rooms
+        endRooms = [];
+        secretRooms = [];
+        for(var y = 1; y < cells.length - 1; y++) {
+            for(var x = 1; x < cells[y].length - 1; x++) {
+                var sumNeighbours = cells[y - 1][x] + cells[y][x + 1] + cells[y + 1][x] + cells[y][x - 1];
+
+                if(cells[y][x] == 0 && sumNeighbours >= 1){ // possible secret room
+                    secrertRooms.push([x,y]);
+                } else if (cells[y][x] == 1 && sumNeighbours == 1 && x != queue[0][0] && y != queue[0][1]){ // end room
+                    endRooms.push([x,y]);
+                }
             }
         }
 
