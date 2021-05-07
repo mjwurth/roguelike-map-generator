@@ -97,19 +97,19 @@
         var cellSize = canvas.width/10;
         for(var y = 0; y < cells.length; y++) {
             for(var x = 0; x < cells[y].length; x++) {
-                if(cells[y][x] == 1){
+                if(cells[y][x] == 1){ // normal room
                     ctx.fillStyle='grey';
                     ctx.fillRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
 
                     ctx.fillStyle='black';
                     ctx.strokeRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
-                } else if (cells[y][x] == 2){
+                } else if (cells[y][x] == 2){ // item room
                     ctx.fillStyle='yellow';
                     ctx.fillRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
 
                     ctx.fillStyle='black';
                     ctx.strokeRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
-                } else if (cells[y][x] == 3){
+                } else if (cells[y][x] == 3){ // boss room
                     ctx.fillStyle='red';
                     ctx.fillRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
 
