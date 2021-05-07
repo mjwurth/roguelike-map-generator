@@ -41,12 +41,13 @@
         totalRooms = 7 + Math.floor(Math.random() * 10); // 7 + [0,9] rooms
         endRooms = [];
 
+        // set start room = 1
+        cells[queue[0][1]][queue[0][0]] = 1;
+
         for(var room = 0; (room < totalRooms) && (room < queue.length); room++){
             var roomX = queue[room][0];
             var roomY = queue[room][1];
             var endRoom = true;
-
-            cells[roomY][roomX] = 1;
 
             // determine neighbour cells in clockwise
             var neighbours = [[roomX, roomY - 1], [roomX + 1, roomY], [roomX, roomY + 1], [roomX - 1, roomY]];
@@ -67,7 +68,7 @@
                 }
 
                 // If the neighbour cell itself has more than one filled neighbour, give up.
-                if ((cells[neighbourY - 1][neighbourX] + cells[neighbourY][neighbourX + 1] + cells[neighbourY + 1][neighbourX]) + cells[neighbourY][neighbourX - 1] > 1){
+                if ((cells[neighbourY - 1][neighbourX] + cells[neighbourY][neighbourX + 1] + cells[neighbourY + 1][neighbourX] + cells[neighbourY][neighbourX - 1]) > 1){
                     continue;
                 }
                 
@@ -78,6 +79,7 @@
 
                 // Otherwise, mark the neighbour cell as having a room in it, and add it to the queue.
                 queue.push([neighbourX, neighbourY]);
+                cells[neighbourY][neighbourX] = 1;
                 endRoom = false;
             }
             
@@ -93,10 +95,25 @@
 
         // iterate over all cells of map to draw
         var cellSize = canvas.width/10;
-        ctx.fillStyle='black';
         for(var y = 0; y < cells.length; y++) {
             for(var x = 0; x < cells[y].length; x++) {
-                if(cells[y][x] > 0){
+                if(cells[y][x] == 1){
+                    ctx.fillStyle='grey';
+                    ctx.fillRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
+
+                    ctx.fillStyle='black';
+                    ctx.strokeRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
+                } else if (cells[y][x] == 2){
+                    ctx.fillStyle='yellow';
+                    ctx.fillRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
+
+                    ctx.fillStyle='black';
+                    ctx.strokeRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
+                } else if (cells[y][x] == 3){
+                    ctx.fillStyle='red';
+                    ctx.fillRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
+
+                    ctx.fillStyle='black';
                     ctx.strokeRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
                 }
             }
