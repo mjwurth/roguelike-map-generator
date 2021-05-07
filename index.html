@@ -115,6 +115,14 @@
 
                     ctx.fillStyle='black';
                     ctx.strokeRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
+                } else if (cells[y][x] == 4){ // secret room
+                    ctx.fillStyle='black';
+                    ctx.fillRect(0+x*cellSize, 0+y*cellSize, cellSize, cellSize);
+
+                    ctx.font = "10px Comic Sans MS";
+                    ctx.fillStyle = "white";
+                    ctx.textAlign = "center";
+                    ctx.fillText("?", x*cellSize + cellSize/2, y*cellSize + cellSize/2);
                 }
             }
         }
