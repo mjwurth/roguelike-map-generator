@@ -116,6 +116,20 @@
             // boss room
             var rand = Math.floor(Math.random() * endRooms.length);
             cells[endRooms[rand][1]][endRooms[rand][0]] = 3;
+
+            // secret rooms cant spawn next to boss rooms
+            var x = endRooms[rand][0];
+            var y = endRooms[rand][1];
+            var neighbours = [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]];
+
+            for(i = 0; i < neighbours.length; i++){
+                for(j = 0; j < secretRooms.length; j++){
+                    if(secretRooms[j][0] == neighbours[i][0] && secretRooms[j][1] == neighbours[i][1]){
+                        secretRooms.splice(j,1);
+                    }
+                }
+            }
+
             endRooms.splice(rand,1);
         }
 
