@@ -18,6 +18,8 @@
     function makeMap(){
         const canvas = document.getElementById('map');
         const ctx = canvas.getContext('2d');
+
+        var retry = false;
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle='white';
@@ -102,6 +104,22 @@
             }
         }
 
+        // if not enough rooms retries map making
+        if(endRooms.length < 2){
+            retry = true;
+        } else { // sets item room and boss room
+            // item room
+            var rand = Math.floor(Math.random() * endRooms.length);
+            cells[endRooms[rand][1]][endRooms[rand][0]] = 2;
+            endRooms.splice(rand,1);
+
+            // boss room
+            var rand = Math.floor(Math.random() * endRooms.length);
+            cells[endRooms[rand][1]][endRooms[rand][0]] = 3;
+            endRooms.splice(rand,1);
+        }
+
+        // secret rooms
         roomCount = 0;
         while(secretRooms.length > 0 && roomCount < 2){
             var rand = Math.floor(Math.random() * secretRooms.length);
@@ -149,6 +167,10 @@
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
         ctx.fillText("start", queue[0][0]*cellSize + cellSize/2, queue[0][1]*cellSize + cellSize/2);
+
+        if(retry){
+            makeMap();
+        }
 
     }
 </script>
