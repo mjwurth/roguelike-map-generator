@@ -104,11 +104,9 @@
 
         roomCount = 0;
         while(secretRooms.length > 0 && roomCount < 2){
-            console.log(secretRooms.length);
             var rand = Math.floor(Math.random() * secretRooms.length);
             cells[secretRooms[rand][1]][secretRooms[rand][0]] = 4;
             secretRooms.splice(rand,1);
-            console.log(secretRooms.length);
             roomCount++;
         }
 
